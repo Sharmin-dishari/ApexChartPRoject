@@ -7,10 +7,13 @@
       :series="series"
     ></apexchart>
     <div>
-      <VolumeChart />
+      <volume-chart :volumeData="data1" />
     </div>
     <div>
-      <RSIChart />
+      <RSIChart :volume-data="data1" />
+    </div>
+    <div>
+      <RSI1Chart :volume-data="data1" />
     </div>
   </div>
 </template>
@@ -19,11 +22,13 @@
 import VueApexCharts from "vue3-apexcharts";
 import VolumeChart from "./VolumeChart.vue";
 import RSIChart from "./RSIChart.vue";
+import RSI1Chart from "./RSI1.vue";
 export default {
   components: {
     apexchart: VueApexCharts,
     VolumeChart,
     RSIChart,
+    RSI1Chart,
   },
   data: function () {
     return {

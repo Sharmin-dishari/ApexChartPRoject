@@ -8,73 +8,118 @@
 import VueApexCharts from "vue3-apexcharts";
 
 export default {
-  name: "ColumnChart",
+  name: "VolumeChart",
   components: {
     apexchart: VueApexCharts,
   },
-  data() {
-    return {
-      series: [
-        {
-          data: [30, 40, 45, 50, 49, 60, 70, 91, 125],
-        },
-      ],
-      chartOptions: {
+  props: {
+    volumeData: Array,
+  },
+  computed: {
+    chartOptions() {
+      return {
         chart: {
           type: "bar",
           height: 350,
-          toolbar: {
-            show: false,
-          },
         },
         plotOptions: {
           bar: {
-            columnWidth: "45%",
-            distributed: true,
+            horizontal: false,
+            columnWidth: "80%",
+            colors: {
+              ranges: [
+                {
+                  from: 0,
+                  to: 1000000,
+                  color: "#FFB64D",
+                },
+                {
+                  from: 1000000,
+                  to: 5000000,
+                  color: "#FF4D4D",
+                },
+                {
+                  from: 5000000,
+                  to: 10000000,
+                  color: "#6E4C41",
+                },
+                {
+                  from: 10000000,
+                  to: 20000000,
+                  color: "#9932CC",
+                },
+                {
+                  from: 20000000,
+                  to: 50000000,
+                  color: "#008000",
+                },
+                {
+                  from: 50000000,
+                  to: 100000000,
+                  color: "#00FFFF",
+                },
+                {
+                  from: 100000000,
+                  to: 500000000,
+                  color: "#1E90FF",
+                },
+                {
+                  from: 500000000,
+                  to: 1000000000,
+                  color: "#9400D3",
+                },
+              ],
+              gradient: {
+                shade: "light",
+                type: "horizontal",
+                shadeIntensity: 0.25,
+                gradientToColors: undefined,
+                inverseColors: true,
+                opacityFrom: 0.85,
+                opacityTo: 0.85,
+                stops: [0, 50, 100],
+                colorStops: [],
+              },
+            },
           },
         },
         dataLabels: {
           enabled: false,
         },
         xaxis: {
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-          ],
+          type: "datetime",
+          categories: this.volumeData.map((data) => data.Date),
           labels: {
-            style: {
-              fontSize: "14px",
-            },
+            show: false,
           },
         },
         yaxis: {
-          title: {
-            text: "Sales",
-            style: {
-              fontSize: "14px",
-            },
-          },
           labels: {
-            style: {
-              fontSize: "14px",
+            formatter: function (value) {
+              return value / 1000000 + "M";
             },
           },
         },
-        tooltip: {
-          enabled: true,
+        title: {
+          text: "Volume Chart",
+          align: "center",
           style: {
-            fontSize: "14px",
+            fontSize: "20px",
+            fontWeight: "bold",
+            fontFamily: undefined,
+            color: "#263238",
           },
         },
-      },
-    };
+      };
+    },
+    series() {
+      return [
+        {
+          name: "Volume",
+          data: this.volumeData.map((data) => data.Volume),
+        },
+      ];
+    },
   },
 };
 </script>
