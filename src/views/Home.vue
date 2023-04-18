@@ -2,7 +2,7 @@
   <HelloWorld />
 </template>
 
-<!-- <script setup> -->
+<script setup>
 import HelloWorld from "@/components/HelloWorld.vue";
 const sharmin = [
   {

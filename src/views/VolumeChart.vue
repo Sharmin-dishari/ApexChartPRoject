@@ -101,7 +101,6 @@ export default {
           },
         },
         title: {
-          text: "Volume Chart",
           align: "center",
           style: {
             fontSize: "20px",
