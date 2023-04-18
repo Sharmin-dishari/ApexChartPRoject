@@ -20,7 +20,7 @@ export default {
       return {
         chart: {
           type: "bar",
-          height: 50,
+          height: 150,
            toolbar: {
             show: false,
           },

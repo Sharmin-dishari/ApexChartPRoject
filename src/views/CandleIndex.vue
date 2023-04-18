@@ -1,17 +1,6 @@
 <template>
   <div>
-    <apexchart height="500" type="line" :options="chartOptions" :series="seriesData" style="border: 1px solid grey"/>
-    <!-- <div class="text-center">
-      <v-btn v-if="currentPage === 1" @click="currentPage++">Next</v-btn>
-      <v-btn
-        class="mx-md px=md"
-        v-else-if="currentPage === 2"
-        @click="currentPage--"
-      >
-        Previous
-      </v-btn>
-      <v-btn v-if="currentPage === 2" @click="showAllObjects"> Show All </v-btn>
-    </div> -->
+    <apexchart height="500" type="line"  :options="chartOptions" :series="seriesFilteredData" style="border: 1px solid grey"/>
   </div>
 </template>
 
@@ -24,13 +13,10 @@ export default {
   },
   props: {
     volumeData: Array,
+    showEMA: { type: Boolean, default: false }
   },
   data() {
     return {
-      currentPage: 1,
-      showAll: false,
-      visibleObjects: [],
-
       chartOptions: {
         chart: {
           type: "bar",
@@ -87,24 +73,12 @@ export default {
     //   const end = start + 20;
     //   return this.volumeData.slice(start, end);
     // },
-    displayedObjects() {
-      if (this.currentPage === 1) {
-        return this.volumeData.slice(0, 30);
-      } else if (this.currentPage === 2) {
-        if (this.showAll) {
-          return this.volumeData;
-        } else {
-          return this.visibleObjects;
-        }
-      }
-      return 0;
-    },
     seriesData() {
       return [
         {
           name: "EMA",
           type: "line",
-          data: this.displayedObjects.map((obj) => ({
+          data: this.volumeData.map((obj) => ({
             x: this.formattedDate(obj.Date),
             y: obj.EMA50,
           })),
@@ -112,37 +86,54 @@ export default {
         {
           name: "CANDLE",
           type: "candlestick",
-          data: this.displayedObjects.map((obj) => ({
+          data: this.volumeData.map((obj) => ({
             x: this.formattedDate(obj.Date),
             y: [obj.Open, obj.High, obj.Low, obj.Close],
           })),
         },
       ];
     },
-  },
-  methods: {
-    showAllObjects() {
-      const remainingObjects = this.volumeData.slice(20);
-      console.log(remainingObjects, "remaining");
-      let i = 0;
-      const interval = setInterval(() => {
-        if (i < remainingObjects.length) {
-          this.visibleObjects.push(remainingObjects[i]);
-          i++;
-        } else {
-          clearInterval(interval);
-          this.showAll = true;
-        }
-      }, 1000);
-      this.showAll = false; // Change the interval time to adjust the speed of showing objects
+    seriesFilteredData () {
+    if (!this.showEMA) {
+    return [
+         {
+            name: "CANDLE",
+            type: "candlestick",
+            data: this.volumeData.map((obj) => ({
+              x: this.formattedDate(obj.Date),
+              y: [obj.Open, obj.High, obj.Low, obj.Close],
+            })),
+          }]}
+          else{
+           return [
+          {
+            name: "EMA",
+            type: "line",
+            data: this.volumeData.map((obj) => ({
+              x: this.formattedDate(obj.Date),
+              y: obj.EMA50,
+            })),
+          },
+          {
+            name: "CANDLE",
+            type: "candlestick",
+            data: this.volumeData.map((obj) => ({
+              x: this.formattedDate(obj.Date),
+              y: [obj.Open, obj.High, obj.Low, obj.Close],
+            })),
+          },
+        ]   
+    }
     },
+  },
+    methods: {
     formattedDate(timestamp) {
-      const date = new Date(timestamp);
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, "0");
-      const day = date.getDate().toString().padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    },
-  },
-};
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      },
+    }
+  }
 </script>

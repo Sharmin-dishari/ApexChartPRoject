@@ -1,26 +1,62 @@
 <template>
   <div class="pa-2">
     <div>
-      <CandleIndex :volume-data="data1" />
+      <CandleIndex :volume-data="displayedObjects" :showEMA="showEMA5" />
     </div>
     <div class="py-2">
-      <volume-chart :volumeData="data1" />
+      <volume-chart :volume-data="displayedObjects" />
     </div>
 
-      <div v-if="showRSI">
-        <RSI1Chart :volume-data="data1" />
-      </div>
-            <!-- <div>
+    <div style="height: 190px">
+      <RSI1Chart :volume-data="displayedObjects" v-if="showRSI" />
+    </div>
+    <div
+      style="border: 1px solid red"
+      class="d-flex justify-space-around align-center py-7"
+    >
+      <div>
+        <div>
+          <v-checkbox
+            v-model="showEMA5"
+            label="EMA"
+            color="green-darken-3"
+            hide-details
+          ></v-checkbox>
+        </div>
+        <div>
           <v-checkbox
             v-model="showRSI"
             label="RSI"
             color="red-darken-3"
-            value="red-darken-3"
             hide-details
           ></v-checkbox>
-        </div> -->
+        </div>
+      </div>
+      <div>
+        <v-btn
+          v-if="currentPage === 1"
+          @click="currentPage++"
+          color="green-darken-2"
+          >Next</v-btn
+        >
+        <v-btn
+          class="mx-4 px-4"
+          v-else-if="currentPage === 2"
+          color="red-darken-2"
+          @click="currentPage--"
+        >
+          Previous
+        </v-btn>
+        <v-btn
+          v-if="currentPage === 2"
+          color="blue-darken-2"
+          @click="showAllObjects"
+        >
+          Show All
+        </v-btn>
+      </div>
     </div>
-
+  </div>
 </template>
 
 <script>
@@ -36,6 +72,10 @@ export default {
   data: function () {
     return {
       showRSI: true,
+      currentPage: 1,
+      showAll: false,
+
+      showEMA5: false,
       data1: [
         {
           Date: 1675036800000,
@@ -548,7 +588,46 @@ export default {
           CMPR: 293.0,
         },
       ],
+      visibleObjects: [],
     };
+  },
+  computed: {
+    displayedObjects() {
+      if (this.currentPage === 1) {
+        return this.data1.slice(0, 20);
+      } else if (this.currentPage === 2) {
+        if (this.showAll) {
+          return this.data1;
+        } else {
+          return this.visibleObjects;
+        }
+      }
+      return 0;
+    },
+  },
+  methods: {
+    showAllObjects() {
+      const remainingObjects = this.data1.slice(20);
+      console.log(remainingObjects, "remaining");
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < remainingObjects.length) {
+          this.visibleObjects.push(remainingObjects[i]);
+          i++;
+        } else {
+          clearInterval(interval);
+          this.showAll = true;
+        }
+      }, 1000);
+      this.showAll = false; // Change the interval time to adjust the speed of showing objects
+    },
+    formattedDate(timestamp) {
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    },
   },
 };
 </script>
