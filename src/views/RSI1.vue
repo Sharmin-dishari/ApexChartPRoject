@@ -1,6 +1,6 @@
 <template>
   <div>
-    <apexchart type="line" :options="options" :series="series" />
+    <apexchart height="90" type="line" :options="options" :series="series" style="border: 1px solid grey"/>
   </div>
 </template>
 
@@ -30,19 +30,23 @@ export default {
     options() {
       return {
         chart: {
-          height: 350,
+          height: 150,
           type: "line",
           toolbar: {
             show: false,
           },
         },
         xaxis: {
-          categories: this.volumeData.map((data) =>
-            this.formattedDate(data.Date)
-          ),
+          type: "datetime",
+          categories: this.volumeData.map((data) => data.Date),
+          labels: {
+            show: false,
+          },
         },
         yaxis: {
-          opposite: true,
+          labels: {
+            show: false,
+          },
         },
         series: [
           {
@@ -50,7 +54,7 @@ export default {
             data: this.volumeData.map((item) => item.CMPR),
           },
         ],
-        colors: ["#FF4560"],
+        colors: ["#272323"],
         stroke: {
           width: 2,
         },

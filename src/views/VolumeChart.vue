@@ -1,6 +1,6 @@
 <template>
   <div>
-    <apexchart type="bar" :options="chartOptions" :series="series"></apexchart>
+    <apexchart height="150" type="bar" :options="chartOptions" :series="series" style="border: 1px solid grey"></apexchart>
   </div>
 </template>
 
@@ -20,68 +20,32 @@ export default {
       return {
         chart: {
           type: "bar",
-          height: 350,
+          height: 50,
+           toolbar: {
+            show: false,
+          },
+
+          
         },
         plotOptions: {
           bar: {
-            horizontal: false,
-            columnWidth: "80%",
+            columnWidth: '80%',
             colors: {
               ranges: [
                 {
                   from: 0,
-                  to: 1000000,
-                  color: "#FFB64D",
+                  to: 3000000,
+                  color: "#f44336",
                 },
                 {
-                  from: 1000000,
-                  to: 5000000,
-                  color: "#FF4D4D",
-                },
-                {
-                  from: 5000000,
-                  to: 10000000,
-                  color: "#6E4C41",
-                },
-                {
-                  from: 10000000,
-                  to: 20000000,
-                  color: "#9932CC",
-                },
-                {
-                  from: 20000000,
-                  to: 50000000,
-                  color: "#008000",
-                },
-                {
-                  from: 50000000,
+                  from: 3000000,
                   to: 100000000,
-                  color: "#00FFFF",
+                  color: "#1ba44f",
                 },
-                {
-                  from: 100000000,
-                  to: 500000000,
-                  color: "#1E90FF",
-                },
-                {
-                  from: 500000000,
-                  to: 1000000000,
-                  color: "#9400D3",
-                },
-              ],
-              gradient: {
-                shade: "light",
-                type: "horizontal",
-                shadeIntensity: 0.25,
-                gradientToColors: undefined,
-                inverseColors: true,
-                opacityFrom: 0.85,
-                opacityTo: 0.85,
-                stops: [0, 50, 100],
-                colorStops: [],
-              },
+]
+
             },
-          },
+          }
         },
         dataLabels: {
           enabled: false,
@@ -94,19 +58,11 @@ export default {
           },
         },
         yaxis: {
+          opposite: true,
           labels: {
             formatter: function (value) {
               return value / 1000000 + "M";
             },
-          },
-        },
-        title: {
-          align: "center",
-          style: {
-            fontSize: "20px",
-            fontWeight: "bold",
-            fontFamily: undefined,
-            color: "#263238",
           },
         },
       };

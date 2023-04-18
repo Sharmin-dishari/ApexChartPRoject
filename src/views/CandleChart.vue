@@ -3,24 +3,24 @@
     <div>
       <CandleIndex :volume-data="data1" />
     </div>
-    <div>
+    <div class="py-2">
       <volume-chart :volumeData="data1" />
     </div>
-    <div class="row">
-      <div>
-        <v-checkbox
-          v-model="showRSI"
-          label="RSI"
-          color="red-darken-3"
-          value="red-darken-3"
-          hide-details
-        ></v-checkbox>
-      </div>
+
       <div v-if="showRSI">
         <RSI1Chart :volume-data="data1" />
       </div>
+            <!-- <div>
+          <v-checkbox
+            v-model="showRSI"
+            label="RSI"
+            color="red-darken-3"
+            value="red-darken-3"
+            hide-details
+          ></v-checkbox>
+        </div> -->
     </div>
-  </div>
+
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <apexchart type="line" :options="chartOptions" :series="seriesData" />
-    <div class="text-center">
+    <apexchart height="500" type="line" :options="chartOptions" :series="seriesData" style="border: 1px solid grey"/>
+    <!-- <div class="text-center">
       <v-btn v-if="currentPage === 1" @click="currentPage++">Next</v-btn>
       <v-btn
         class="mx-md px=md"
@@ -11,7 +11,7 @@
         Previous
       </v-btn>
       <v-btn v-if="currentPage === 2" @click="showAllObjects"> Show All </v-btn>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -32,11 +32,16 @@ export default {
       visibleObjects: [],
 
       chartOptions: {
-        height: 350,
-        type: "line",
-      },
+        chart: {
+          type: "bar",
+          height: 350,
+          toolbar: {
+            show: false,
+          },
+
+        },
       stroke: {
-        width: [3, 1],
+        width: [2, 1],
       },
       tooltip: {
         shared: true,
@@ -53,14 +58,27 @@ export default {
           },
         ],
       },
+        dataLabels: {
+          enabled: false
+        },
+        colors: ["#272323"],
+        legend: {
+          show: false
+        },
       xaxis: {
         type: "datetime",
+        categories: this.volumeData.map((data) => data.Date),
+        labels: {
+          show: false,
+        },
       },
       yaxis: {
+        opposite: true,
         tooltip: {
           enabled: true,
         },
       },
+ },
     };
   },
   computed: {
@@ -71,7 +89,7 @@ export default {
     // },
     displayedObjects() {
       if (this.currentPage === 1) {
-        return this.volumeData.slice(0, 20);
+        return this.volumeData.slice(0, 30);
       } else if (this.currentPage === 2) {
         if (this.showAll) {
           return this.volumeData;
