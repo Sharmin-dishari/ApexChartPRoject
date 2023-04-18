@@ -3,16 +3,23 @@
     <div>
       <CandleIndex :volume-data="displayedObjects" :showEMA="showEMA5" />
     </div>
-    <div class="py-2">
+
+    <div class="my-3">
+      <p class="mb-n14 ml-2">Volume</p>
       <volume-chart :volume-data="displayedObjects" />
     </div>
 
     <div style="height: 190px">
+      <p class="mb-n14 ml-2">RSI</p>
       <RSI1Chart :volume-data="displayedObjects" v-if="showRSI" />
     </div>
     <div
       style="border: 1px solid red"
-      class="d-flex justify-space-around align-center py-7"
+      :class="
+        $vuetify.display.mdAndUp
+          ? 'd-flex justify-space-around align-center py-7'
+          : 'py-7'
+      "
     >
       <div>
         <div>
@@ -32,28 +39,30 @@
           ></v-checkbox>
         </div>
       </div>
-      <div>
-        <v-btn
-          v-if="currentPage === 1"
-          @click="currentPage++"
-          color="green-darken-2"
-          >Next</v-btn
-        >
-        <v-btn
-          class="mx-4 px-4"
-          v-else-if="currentPage === 2"
-          color="red-darken-2"
-          @click="currentPage--"
-        >
-          Previous
-        </v-btn>
-        <v-btn
-          v-if="currentPage === 2"
-          color="blue-darken-2"
-          @click="showAllObjects"
-        >
-          Show All
-        </v-btn>
+      <div class="pl-2">
+        <div v-if="currentPage === 1">
+          <v-btn color="blue-darken-2" @click="currentPage++">Next</v-btn>
+        </div>
+        <div v-else-if="currentPage === 2">
+          <v-btn class="mt-2" color="red-darken-2" @click="currentPage--">
+            Previous
+          </v-btn>
+        </div>
+        <div v-if="currentPage === 2 && !showAll">
+          <v-btn color="green-darken-2 mr-4 mt-2" @click="showMoreObjects">
+            Click to Add
+          </v-btn>
+        </div>
+        <div v-if="currentPage === 2 && !showAll">
+          <v-btn
+            color="red-darken-2"
+            class="mt-2"
+            v-if="currentPage === 2 && !showAll"
+            @click="showAllObjects"
+          >
+            Show Automatically
+          </v-btn>
+        </div>
       </div>
     </div>
   </div>
@@ -74,6 +83,7 @@ export default {
       showRSI: true,
       currentPage: 1,
       showAll: false,
+      currentIndex: 20,
 
       showEMA5: false,
       data1: [
@@ -605,10 +615,40 @@ export default {
       return 0;
     },
   },
+
   methods: {
+    showMoreObjects() {
+      // this.visibleObjects = this.data1.slice(0, 20);
+      for (let i = this.currentIndex; i < this.currentIndex + 1; i++) {
+        if (i < this.data1.length) {
+          this.visibleObjects.push(this.data1[i]);
+        }
+      }
+      this.currentIndex += 1;
+    },
+    // showAllObjects() {
+    //   const remainingObjects = this.data1.slice(20);
+    //   console.log(remainingObjects);
+    //   let i = 0;
+    //   const pushObject = () => {
+    //     if (i < remainingObjects.length) {
+    //       this.visibleObjects.push(remainingObjects[i]);
+    //       i++;
+    //       if (i === remainingObjects.length) {
+    //         this.showAll = true;
+    //       } else {
+    //         // Recursively call this function to push the next object
+    //         // after a small delay (to allow the UI to update)
+    //         requestAnimationFrame(() => pushObject());
+    //       }
+    //     }
+    //   };
+    //   pushObject();
+    // },
+
     showAllObjects() {
+      // this.visibleObjects = this.data1.slice(0, 20);
       const remainingObjects = this.data1.slice(20);
-      console.log(remainingObjects, "remaining");
       let i = 0;
       const interval = setInterval(() => {
         if (i < remainingObjects.length) {

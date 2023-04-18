@@ -17,7 +17,7 @@ const routes = [
       {
         path: 'my-chart',
         name: 'my-chart',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/CandleChart.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ChartIndex.vue'),
       },
     ],
   },
